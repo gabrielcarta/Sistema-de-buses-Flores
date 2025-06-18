@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <link rel="stylesheet" href="../static/style.css" />
+  <script src="../static/script.js"></script>
+  <script src="../static/app.js"></script>
+  <title>Bus Ticket Buddy</title>
+</head>
+
+<body>
+  <header class="navbar">
+    <nav class="navbar-container">
+      <div class="logo">Flores</div>
+
+      <div class="menu-box">
+        <ul class="nav-links">
+          <li><a href="#numero">(01)4800725</a></li>
+          <li><a href="#compras">Mis compras por internet</a></li>
+          <li><a href="#documento">Mi documento electrónico</a></li>
+          <li><a href="#envios">Seguimiento de envíos</a></li>
+        </ul>
+      </div>
+
+      <button class="burger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-overlay">
+        <h1>Hoy empezamos el cambio</h1>
+        <p>Compra tu pasaje en línea</p>
+      </div>
+    </section>
+    <section class="form-section">
+    <form id="bookingForm">
+      <label>
+        📍Origen
+        <input type="text" id="origin" placeholder="TACNA" required />
+      </label>
+
+      <label>
+        📍Destino
+        <input type="text" id="destination" placeholder="LIMA" required />
+      </label>
+
+      <label>
+        📅 Salida
+        <input type="date" id="date" required />
+      </label>
+
+      <label>
+        📅 Retorno (Opcinal)
+        <input type="text" placeholder="dd/mm/yyyy" />
+      </label>
+
+      <button type="submit">Buscar</button>
+    </form>
+  </section>
+  </main>
+
+  <footer>
+    <p>Desarrollado por estudiantes de la ESIS-UNJBG</p>
+  </footer>
+
+</body>
+</html>
