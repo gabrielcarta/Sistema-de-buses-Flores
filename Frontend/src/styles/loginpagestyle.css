@@ -1,0 +1,73 @@
+.login-page-center {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #CCD0CF;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #CCD0CF;
+  max-width: 350px;
+  margin: 80px auto;
+  padding: 2.5rem 2rem 2rem 2rem;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px 0 rgba(17, 33, 45, 0.13); /* sombra azul oscuro */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 2px solid #9BA8AB; /* Borde claro */
+}
+
+.login-container h2 {
+  margin-bottom: 1.5rem;
+  color: #06141B; /* Título oscuro */
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.login-container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.login-container input {
+  padding: 0.8rem 1rem;
+  border: 1.5px solid #9BA8AB; /* Borde claro */
+  border-radius: 8px;
+  font-size: 1rem;
+  background: #CCD0CF; /* Fondo principal */
+  color: #06141B;      /* Texto principal */
+  transition: border 0.2s, background 0.2s;
+}
+
+.login-container input:focus {
+  outline: none;
+  border: 1.5px solid #253745; /* Acento oscuro */
+  background: #fff;
+}
+
+.login-container button {
+  padding: 0.8rem 1rem;
+  background: linear-gradient(90deg, #253745 0%, #4A5C6A 100%); /* De oscuro a suave */
+  color: #CCD0CF;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(17, 33, 45, 0.10);
+}
+
+.login-container button:hover {
+  background: #11212D; /* Hover/acento UI */
+  color: #CCD0CF;
+  transform: translateY(-2px) scale(1.03);
+  box-shadow: 0 4px 16px rgba(6, 20, 27, 0.15);
+}

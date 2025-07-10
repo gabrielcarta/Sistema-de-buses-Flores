@@ -2,24 +2,21 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { NavBar } from './components/navbar';
-import { FormPage } from './pages/formpage';
+import { HomePage } from './pages/homepage';
+import { LoginPage } from './pages/loginpage';
+import { AdminPage } from './pages/adminpage';
 
 function App() {
   return (
     <div className="App">
-      <header className='App-header'>
         <BrowserRouter>
           <NavBar />
           <Routes>
-            <Route path="/" element={<FormPage />} />
+            <Route path="/" element={<LoginPage />} />
+            <Route path="/homepage" element={<HomePage />} />
+            <Route path="/admin" element={<AdminPage />} />
           </Routes>
         </BrowserRouter>
-      </header>
-      <main className='App-main'>
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Este es mi primer proyecto con React c:</p>
-      </main>
     </div>
   );
 }

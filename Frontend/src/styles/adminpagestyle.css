@@ -1,0 +1,108 @@
+.admin-container {
+  min-height: 100vh;
+  background: #CCD0CF;
+  padding: 2rem;
+  padding-top: 20px; /* Ajusta este valor según la altura real de tu navbar */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.admin-title {
+  text-align: center;
+  color: #253745;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.admin-content {
+  display: flex;
+  gap: 2rem;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  width: 100%;
+  max-width: 1100px;
+}
+
+.admin-tools {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 180px;
+}
+
+.admin-tools button {
+  padding: 0.8rem 1.2rem;
+  border-radius: 10px;
+  background: #253745;
+  color: #CCD0CF;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, transform 0.1s;
+  box-shadow: 0 2px 8px rgba(17, 33, 45, 0.10);
+}
+
+.admin-tools button:nth-child(2) {
+  background: #4A5C6A;
+}
+
+.admin-tools button:nth-child(3) {
+  background: #c62828;
+  color: #fff;
+}
+
+.admin-tools button:hover {
+  background: #11212D;
+  color: #fff;
+  transform: translateY(-2px) scale(1.03);
+}
+
+.admin-viajes {
+  flex: 1;
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(17,33,45,0.08);
+  padding: 2rem;
+  min-width: 350px;
+  max-width: 700px;
+}
+
+.admin-viajes h3 {
+  color: #253745;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.admin-viajes table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 1rem;
+}
+
+.admin-viajes th, .admin-viajes td {
+  padding: 0.6rem;
+  text-align: center;
+}
+
+.admin-viajes thead tr {
+  background: #9BA8AB;
+  color: #06141B;
+}
+
+.admin-viajes tbody tr {
+  border-bottom: 1px solid #CCD0CF;
+  transition: background 0.2s;
+}
+
+.admin-viajes tbody tr.selected,
+.admin-viajes tbody tr:hover {
+  background: #9BA8AB;
+  color: #06141B;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
+import viajesdisponibles from '../pages/trippage';
 
 function FormularioViaje() {
   const [cities, setCities] = useState([]);
