@@ -1,4 +1,8 @@
 <?php
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
 include 'db_connect.php'; 
 
 // Verificar conexión
@@ -40,13 +44,13 @@ function insertarBus($conn, $placa, $servicio, $n_pisos, $n_asientos, $id_sede) 
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("sisii", $placa, $n_pisos, $servicio, $n_asientos, $id_sede);
     $stmt->execute();
-    $id_bus = $stmt->insert_id;
+    $Id_Bus = $stmt->insert_id;
     $stmt->close();
 
     for ($i = 1; $i <= $asientos_primer_piso; $i++) {
         $sql_asiento = "INSERT INTO Asiento (Piso, Numero, Id_Bus) VALUES (1, ?, ?)";
         $stmt_asiento = $conn->prepare($sql_asiento);
-        $stmt_asiento->bind_param("ii", $i, $id_bus);
+        $stmt_asiento->bind_param("ii", $i, $Id_Bus);
         $stmt_asiento->execute();
         $stmt_asiento->close();
     }
@@ -54,12 +58,12 @@ function insertarBus($conn, $placa, $servicio, $n_pisos, $n_asientos, $id_sede) 
         for ($j = 1; $j <= $asientos_segundo_piso; $j++) {
             $sql_asiento = "INSERT INTO Asiento (Piso, Numero, Id_Bus) VALUES (2, ?, ?)";
             $stmt_asiento = $conn->prepare($sql_asiento);
-            $stmt_asiento->bind_param("ii", $j, $id_bus);
+            $stmt_asiento->bind_param("ii", $j, $Id_Bus);
             $stmt_asiento->execute();
             $stmt_asiento->close();
         }
     }
-    return $id_bus;
+    return $Id_Bus;
 }
 
 // Leer Buses
@@ -72,31 +76,41 @@ function obtenerBuses($conn) {
 }
 
 // Actualizar Bus (no modifica asientos, solo datos del bus)
-function actualizarBus($conn, $id_bus, $placa, $servicio, $n_pisos, $n_asientos, $id_sede) {
+function actualizarBus($conn, $Id_Bus, $placa, $servicio, $n_pisos, $n_asientos, $id_sede) {
     $servicio = strtolower(trim($servicio));
     $sql = "UPDATE Bus SET Placa=?, N_Pisos=?, Servicio=?, N_asientos=?, Id_Sede=? WHERE Id_Bus=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sisiii", $placa, $n_pisos, $servicio, $n_asientos, $id_sede, $id_bus);
+    $stmt->bind_param("sisiii", $placa, $n_pisos, $servicio, $n_asientos, $id_sede, $Id_Bus);
     $stmt->execute();
     $stmt->close();
 }
 
 // Eliminar Bus (y sus asientos)
-function eliminarBus($conn, $id_bus) {
-    $conn->query("DELETE FROM Asiento WHERE Id_Bus = $id_bus");
-    $conn->query("DELETE FROM Bus WHERE Id_Bus = $id_bus");
+function eliminarBus($conn, $Id_Bus) {
+    $stmt1 = $conn->prepare("DELETE FROM Asiento WHERE Id_Bus = ?");
+    $stmt1->bind_param("i", $Id_Bus);
+    if (!$stmt1->execute()) {
+        file_put_contents("error.log", "Error borrando asientos: " . $stmt1->error . "\n", FILE_APPEND);
+    }
+
+    $stmt2 = $conn->prepare("DELETE FROM Bus WHERE Id_Bus = ?");
+    $stmt2->bind_param("i", $Id_Bus);
+    if (!$stmt2->execute()) {
+        file_put_contents("error.log", "Error borrando bus: " . $stmt2->error . "\n", FILE_APPEND);
+    }
 }
 
+
 // Leer asientos de un bus
-function obtenerAsientosBus($conn, $id_bus, $piso = null) {
+function obtenerAsientosBus($conn, $Id_Bus, $piso = null) {
     if ($piso === null) {
         $sql = "SELECT * FROM Asiento WHERE Id_Bus = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $id_bus);
+        $stmt->bind_param("i", $Id_Bus);
     } else {
         $sql = "SELECT * FROM Asiento WHERE Id_Bus = ? AND Piso = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ii", $id_bus, $piso);
+        $stmt->bind_param("ii", $Id_Bus, $piso);
     }
     $stmt->execute();
     $result = $stmt->get_result();
@@ -152,10 +166,10 @@ function eliminarRuta($conn, $id_ruta) {
  ***********************/
 
 // Crear Viaje y sus detalles de precio por piso
-function insertarViaje($conn, $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $id_bus, $id_ruta, $precios_por_piso) {
+function insertarViaje($conn, $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $Id_Bus, $id_ruta, $precios_por_piso) {
     $sql = "INSERT INTO Viaje (Hora_salida, Hora_llegada, Fecha_salida, Fecha_llegada, Id_Bus, Id_Ruta) VALUES (?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssii", $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $id_bus, $id_ruta);
+    $stmt->bind_param("ssssii", $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $Id_Bus, $id_ruta);
     $stmt->execute();
     $id_viaje = $stmt->insert_id;
     $stmt->close();
@@ -178,6 +192,7 @@ function obtenerViajes($conn, $limit = 20, $offset = 0) {
             INNER JOIN Ruta r ON v.Id_Ruta = r.Id_Ruta
             ORDER BY v.Id_Viaje ASC
             LIMIT ? OFFSET ?";
+
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("ii", $limit, $offset);
     $stmt->execute();
@@ -190,7 +205,7 @@ function obtenerViajes($conn, $limit = 20, $offset = 0) {
 
     $stmt->close();
 
-    // También obtenemos el total de viajes para saber cuántas páginas hay
+    // También obtenemos el total de viajes
     $totalResult = $conn->query("SELECT COUNT(*) AS total FROM Viaje");
     $total = $totalResult->fetch_assoc()['total'];
 
@@ -200,11 +215,12 @@ function obtenerViajes($conn, $limit = 20, $offset = 0) {
     ];
 }
 
+
 // Actualizar Viaje y su detalle de precios
-function actualizarViaje($conn, $id_viaje, $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $id_bus, $id_ruta, $precios_por_piso) {
-    $sql = "UPDATE Viaje SET Hora_salida=?, Hora_llegada=?, Fecha_salida=?, Fecha_llegada=?, Id_Bus=?, Id_Ruta=? WHERE Id_Viaje=?";
+function actualizarViaje($conn, $id_viaje, $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $Id_Bus, $id_ruta, $precios_por_piso) {
+    $sql = "UPDATE Viaje SET Hora_salida=?, Hora_llegada=?, Fecha_salida=?, Fecha_llegada=?,Id_Bus=?, Id_Ruta=? WHERE Id_Viaje=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssiii", $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $id_bus, $id_ruta, $id_viaje);
+    $stmt->bind_param("ssssiii", $hora_salida, $hora_llegada, $fecha_salida, $fecha_llegada, $Id_Bus, $id_ruta, $id_viaje);
     $stmt->execute();
     $stmt->close();
 

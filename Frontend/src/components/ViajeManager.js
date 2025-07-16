@@ -6,19 +6,17 @@ export default function ViajeManager({ onSelectItem }) {
   const [total, setTotal] = useState(0);
   const [pagina, setPagina] = useState(1);
   const [selectedViaje, setSelectedViaje] = useState(null);
-  const limite = 20;
+  const limite = 400;
 
-  useEffect(() => {
-    axios
-      .get(
-        `http://localhost/proyectos/sistemabusesflores/backend/viajes.php?page=${pagina}&limit=${limite}`
-      )
-      .then((res) => {
-        setViajes(res.data.data);
-        setTotal(res.data.total);
-      })
-      .catch((err) => console.error("❌ Error cargando viajes:", err));
-  }, [pagina]);
+useEffect(() => {
+  axios
+    .get(`http://localhost/proyectos/sistemabusesflores/backend/viajes.php?page=${pagina}&limit=${limite}`)
+    .then(res => {
+      setViajes(res.data.data);  // ✅ solo los viajes
+      setTotal(res.data.total);  // ✅ total para paginación
+    })
+    .catch(err => console.error("Error al cargar viajes:", err));
+}, [pagina]); // 👈 Dependencia: cuando cambia la página, vuelve a ejecutar el efecto
 
   const totalPaginas = Math.ceil(total / limite);
 
@@ -65,7 +63,7 @@ export default function ViajeManager({ onSelectItem }) {
               ))
             ) : (
               <tr>
-                <td colSpan="8">No hay viajes registrados.</td>
+                <td colSpan="7">No hay viajes registrados.</td>
               </tr>
             )}
           </tbody>

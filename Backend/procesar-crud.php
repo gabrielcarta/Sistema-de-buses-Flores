@@ -1,8 +1,20 @@
 <?php
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
 include 'db_connect.php'; 
 include 'crud-completo.php';
+header("Access-Control-Allow-Origin: http://localhost:3000");
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS");
+header("Access-Control-Allow-Headers: Content-Type");
+
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+// ... tu código normal para insertar/editar/eliminar
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 
 // Insertar bus
 if (isset($_POST['accion']) && $_POST['accion'] == 'insertar_bus') {
@@ -19,23 +31,24 @@ if (isset($_POST['accion']) && $_POST['accion'] == 'insertar_bus') {
 
 // Actualizar bus
 if (isset($_POST['accion']) && $_POST['accion'] == 'actualizar_bus') {
-    $id_bus = intval($_POST['id_bus']);
-    $placa = $_POST['placa'] ?? '';
-    $servicio = $_POST['servicio'] ?? '';
-    $n_pisos = intval($_POST['n_pisos'] ?? 2);
-    $n_asientos = intval($_POST['n_asientos'] ?? 52);
-    $id_sede = intval($_POST['id_sede'] ?? 1);
+    $id_bus = intval($_POST['Id_bus']);
+    $placa = $_POST['nuevaPlaca'] ?? '';
+    $servicio = $_POST['nuevoServicio'] ?? '';
+    $n_pisos = intval($_POST['N_pisos'] ?? 2);
+    $n_asientos = intval($_POST['N_asientos'] ?? 52);
+    $id_sede = intval($_POST['Id_Sede'] ?? 1);
 
-    actualizarBus($conn, $id_bus, $placa, $servicio, $n_pisos, $n_asientos, $id_sede);
-    echo "Bus actualizado con ID: $id_bus";
+    actualizarBus($conn, $Id_bus, $nuevaPlaca, $nuevoServicio, $N_pisos, $N_asientos, $Id_Sede);
+    echo "Bus actualizado con ID: $Id_bus";
     exit;
 }
 
 // Eliminar bus
 if (isset($_POST['accion']) && $_POST['accion'] == 'eliminar_bus') {
-    $id_bus = intval($_POST['id_bus']);
-    eliminarBus($conn, $id_bus);
-    echo "Bus eliminado con ID: $id_bus";
+    $id_bus = intval($_POST['Id_Bus']);
+    file_put_contents("debug_eliminar.log", "Intentando eliminar ID: " . $Id_Bus);
+    eliminarBus($conn, $Id_Bus);
+    echo "Bus eliminado con ID: $Id_Bus";
     exit;
 }
 
@@ -117,117 +130,6 @@ if (isset($_POST['accion']) && $_POST['accion'] == 'eliminar_viaje') {
     eliminarViaje($conn, $id_viaje);
     echo "Viaje eliminado con ID: $id_viaje";
     exit;
-}
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $accion = $_POST['accion'] ?? '';
-
-    switch ($accion) {
-        case 'insertar_bus':
-            insertarBus(
-                $conn,
-                $_POST['placa'],
-                $_POST['servicio'],
-                (int)$_POST['n_pisos'],
-                (int)$_POST['n_asientos'],
-                (int)$_POST['id_sede']
-            );
-            echo "Bus insertado correctamente";
-            break;
-
-        case 'actualizar_bus':
-            actualizarBus(
-                $conn,
-                (int)$_POST['id_bus'],
-                $_POST['placa'],
-                $_POST['servicio'],
-                (int)$_POST['n_pisos'],
-                (int)$_POST['n_asientos'],
-                (int)$_POST['id_sede']
-            );
-            echo "Bus actualizado correctamente";
-            break;
-
-        case 'eliminar_bus':
-            eliminarBus($conn, (int)$_POST['id_bus']);
-            echo "Bus eliminado correctamente";
-            break;
-
-        case 'insertar_ruta':
-            insertarRuta(
-                $conn,
-                $_POST['duracion'],
-                (int)$_POST['id_origen'],
-                (int)$_POST['id_llegada']
-            );
-            echo "Ruta insertada correctamente";
-            break;
-
-        case 'actualizar_ruta':
-            actualizarRuta(
-                $conn,
-                (int)$_POST['id_ruta'],
-                $_POST['duracion'],
-                (int)$_POST['id_origen'],
-                (int)$_POST['id_llegada']
-            );
-            echo "Ruta actualizada correctamente";
-            break;
-
-        case 'eliminar_ruta':
-            eliminarRuta($conn, (int)$_POST['id_ruta']);
-            echo "Ruta eliminada correctamente";
-            break;
-
-        case 'insertar_viaje':
-            insertarViaje(
-                $conn,
-                $_POST['hora_salida'],
-                $_POST['hora_llegada'],
-                $_POST['fecha_salida'],
-                $_POST['fecha_llegada'],
-                (int)$_POST['id_bus'],
-                (int)$_POST['id_ruta'],
-                [
-                    1 => (float)$_POST['precio_piso1'],
-                    2 => (float)$_POST['precio_piso2'],
-                ]
-            );
-            echo "Viaje insertado correctamente";
-            break;
-
-        case 'actualizar_viaje':
-            actualizarViaje(
-                $conn,
-                (int)$_POST['id_viaje'],
-                $_POST['hora_salida'],
-                $_POST['hora_llegada'],
-                $_POST['fecha_salida'],
-                $_POST['fecha_llegada'],
-                (int)$_POST['id_bus'],
-                (int)$_POST['id_ruta'],
-                [
-                    1 => (float)$_POST['precio_piso1'],
-                    2 => (float)$_POST['precio_piso2'],
-                ]
-            );
-            echo "Viaje actualizado correctamente";
-            break;
-
-        case 'eliminar_viaje':
-            eliminarViaje($conn, (int)$_POST['id_viaje']);
-            echo "Viaje eliminado correctamente";
-            break;
-
-        default:
-            echo "Acción no válida.";
-            break;
-    }
-}
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    header('Content-Type: application/json'); // para ver salida clara
-    var_dump($_POST);
-    exit; // corta la ejecución para ver solo lo que llega
 }
 
 echo "Acción no válida.";
