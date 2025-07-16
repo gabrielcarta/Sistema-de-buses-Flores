@@ -14,7 +14,7 @@ function FormularioViaje() {
 
   // Obtener las ciudades desde PHP al cargar
   useEffect(() => {
-    fetch('http://localhost/proyectos/sistemabuses/backend/form-trip.php')
+    fetch('http://localhost/proyectos/sistemabusesflores/backend/form-trip.php')
       .then(response => response.json())
       .then(data => {
         setCities(data);
@@ -39,8 +39,8 @@ function FormularioViaje() {
             📍 Origen
             <select value={origin} onChange={e => setOrigin(e.target.value)} required>
               <option value="">Seleccione ciudad</option>
-              {cities.map((cities, i) => (
-              <option key={i} value={cities}>{cities}</option>
+              {cities.map((city, i) => (
+                <option key={i} value={city.Id_Ciudad}>{city.Nombre}</option>
               ))}
             </select>
         </label>
@@ -49,8 +49,8 @@ function FormularioViaje() {
             📍Destino
             <select value={destination} onChange={e => setDestination(e.target.value)} required>
               <option value="">Seleccione ciudad</option>
-              {cities.map((cities, i) => (
-              <option key={i} value={cities}>{cities}</option>
+              {cities.map((city, i) => (
+                <option key={i} value={city.Id_Ciudad}>{city.Nombre}</option>
               ))}
             </select>
         </label>

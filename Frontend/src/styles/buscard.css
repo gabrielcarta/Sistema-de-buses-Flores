@@ -1,0 +1,80 @@
+.bus-card {
+  display: flex;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+.bus-icon {
+  width: 120px;
+  text-align: center;
+  padding: 10px;
+  background: #fff;
+  border-right: 1px solid #ddd;
+}
+
+.bus-icon img {
+  width: 50px;
+  height: 50px;
+  margin-bottom: 10px;
+}
+
+.bus-icon button {
+  font-size: 12px;
+  color: orange;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.bus-info {
+  flex: 1;
+  padding: 15px;
+  font-family: sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.bus-id {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.empresa {
+  font-size: 18px;
+  font-weight: bold;
+  color: orangered;
+}
+
+.details {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.ubicacion {
+  display: flex;
+  justify-content: space-between;
+  font-size: 14px;
+}
+
+.acciones {
+  text-align: right;
+}
+
+.acciones button {
+  margin-top: 10px;
+  border: 1px solid orange;
+  padding: 5px 10px;
+  background: white;
+  color: orange;
+  border-radius: 5px;
+  cursor: pointer;
+}

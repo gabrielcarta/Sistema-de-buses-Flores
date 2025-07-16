@@ -1,95 +1,131 @@
-import React, { useState } from 'react';
-import '../styles/adminpagestyle.css';
+import React, { useState, useEffect } from "react";
+import Sidebar from "../components/sidebar";
+import BusManager from "../components/BusManager";
+import RutaManager from "../components/RutaManager";
+import ViajeManager from "../components/ViajeManager";
+import CrudModal from "../components/CrudModal";
+import "../styles/adminpagestyle.css";
 
-export const AdminPage = () => {
-  const [viajes, setViajes] = useState([
-    { id: 1, origen: 'Lima', destino: 'Cusco', fecha: '2025-07-15' },
-    { id: 2, origen: 'Arequipa', destino: 'Tacna', fecha: '2025-07-20' },
-  ]);
-  const [selectedId, setSelectedId] = useState(null);
+export default function AdminPage() {
+  const [vistaActiva, setVistaActiva] = useState("buses");
+  const [crudAccion, setCrudAccion] = useState(null);
+  const [itemSeleccionado, setItemSeleccionado] = useState(null);
+  const [reloadFlag, setReloadFlag] = useState(false);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [tipoCrud, setTipoCrud] = useState("");
 
-  // Ejemplo de añadir viaje
-  const handleAdd = () => {
-    const origen = prompt('Origen:');
-    const destino = prompt('Destino:');
-    const fecha = prompt('Fecha (YYYY-MM-DD):');
-    if (origen && destino && fecha) {
-      setViajes([
-        ...viajes,
-        { id: Date.now(), origen, destino, fecha }
-      ]);
-    }
+  const recargarDatos = () => {
+    setReloadFlag((prev) => !prev);
   };
 
-  // Ejemplo de modificar viaje
-  const handleEdit = () => {
-    if (!selectedId) {
-      alert('Selecciona un viaje para modificar.');
-      return;
+  const ejecutarCrud = (accion, item) => {
+    const formData = new FormData();
+
+    if (vistaActiva === "buses") {
+      formData.append("accion", `${accion}_bus`);
+      if (accion !== "eliminar") {
+        formData.append("placa", item?.Placa || "AAA-000");
+        formData.append("servicio", item?.Servicio || "ejecutivo");
+        formData.append("n_pisos", item?.N_Pisos || 2);
+        formData.append("n_asientos", item?.N_asientos || 52);
+        formData.append("id_sede", item?.Id_Sede || 1);
+      }
+      if (accion !== "crear") formData.append("id_bus", item?.Id_Bus);
     }
-    const viaje = viajes.find(v => v.id === selectedId);
-    const origen = prompt('Nuevo origen:', viaje.origen);
-    const destino = prompt('Nuevo destino:', viaje.destino);
-    const fecha = prompt('Nueva fecha (YYYY-MM-DD):', viaje.fecha);
-    if (origen && destino && fecha) {
-      setViajes(viajes.map(v =>
-        v.id === selectedId ? { ...v, origen, destino, fecha } : v
-      ));
+
+    if (vistaActiva === "rutas") {
+      formData.append("accion", `${accion}_ruta`);
+      if (accion !== "eliminar") {
+        formData.append("duracion", item?.Duracion || "5h");
+        formData.append("id_origen", item?.Id_Origen || 1);
+        formData.append("id_llegada", item?.Id_Llegada || 2);
+      }
+      if (accion !== "crear") formData.append("id_ruta", item?.Id_Ruta);
     }
+
+    if (vistaActiva === "viajes") {
+      formData.append("accion", `${accion}_viaje`);
+      if (accion !== "eliminar") {
+        formData.append("hora_salida", item?.Hora_salida || "08:00");
+        formData.append("hora_llegada", item?.Hora_llegada || "14:00");
+        formData.append("fecha_salida", item?.Fecha_salida || "2025-07-20");
+        formData.append("fecha_llegada", item?.Fecha_llegada || "2025-07-20");
+        formData.append("id_bus", item?.Id_Bus || 1);
+        formData.append("id_ruta", item?.Id_Ruta || 1);
+        formData.append("precio_piso1", 40);
+        formData.append("precio_piso2", 50);
+      }
+      if (accion !== "crear") formData.append("id_viaje", item?.Id_Viaje);
+    }
+
+    fetch("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.text())
+      .then((data) => {
+        alert("✅ Resultado: " + data);
+        setItemSeleccionado(null);
+        recargarDatos();
+      })
+      .catch((err) => alert("❌ Error: " + err));
   };
 
-  // Ejemplo de eliminar viaje
-  const handleDelete = () => {
-    if (!selectedId) {
-      alert('Selecciona un viaje para eliminar.');
-      return;
+  useEffect(() => {
+    if (crudAccion) {
+      if (crudAccion === "crear") {
+        setTipoCrud(vistaActiva.slice(0, -1)); // "buses" → "bus"
+        setModalVisible(true);
+      } else {
+        if (!itemSeleccionado) {
+          alert("Selecciona un elemento primero.");
+        } else {
+          ejecutarCrud(crudAccion, itemSeleccionado);
+        }
+      }
+      setCrudAccion(null);
     }
-    if (window.confirm('¿Seguro que deseas eliminar este viaje?')) {
-      setViajes(viajes.filter(v => v.id !== selectedId));
-      setSelectedId(null);
+  }, [crudAccion, vistaActiva, itemSeleccionado]);
+
+  const enviarFormulario = (formData) => {
+    fetch("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
+      method: "POST",
+      body: formData,
+    })
+      .then((res) => res.text())
+      .then((data) => {
+        alert("✅ Resultado: " + data);
+        setModalVisible(false);
+        setItemSeleccionado(null);
+        recargarDatos();
+      })
+      .catch((err) => alert("❌ Error: " + err));
+  };
+
+  const renderVista = () => {
+    if (vistaActiva === "buses") {
+      return <BusManager onSelectItem={setItemSeleccionado} reloadFlag={reloadFlag} />;
+    } else if (vistaActiva === "rutas") {
+      return <RutaManager onSelectItem={setItemSeleccionado} reloadFlag={reloadFlag} />;
+    } else if (vistaActiva === "viajes") {
+      return <ViajeManager onSelectItem={setItemSeleccionado} reloadFlag={reloadFlag} />;
     }
   };
 
   return (
-    <div className="admin-container">
-      <h2 className="admin-title">Panel de Administración</h2>
-      <div className="admin-content">
-        {/* Herramientas */}
-        <div className="admin-tools">
-          <button onClick={handleAdd}>Añadir viaje</button>
-          <button onClick={handleEdit}>Modificar viaje</button>
-          <button onClick={handleDelete}>Eliminar viaje</button>
-        </div>
-        {/* Viajes disponibles */}
-        <div className="admin-viajes">
-          <h3>Viajes disponibles</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Origen</th>
-                <th>Destino</th>
-                <th>Fecha</th>
-                <th>ID</th>
-              </tr>
-            </thead>
-            <tbody>
-              {viajes.map(viaje => (
-                <tr
-                  key={viaje.id}
-                  className={selectedId === viaje.id ? 'selected' : ''}
-                  onClick={() => setSelectedId(viaje.id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td>{viaje.origen}</td>
-                  <td>{viaje.destino}</td>
-                  <td>{viaje.fecha}</td>
-                  <td>{viaje.id}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+    <div className="admin-wrapper">
+      <Sidebar
+        vistaActiva={vistaActiva}
+        onSelect={setVistaActiva}
+        onCrudAction={setCrudAccion}
+      />
+      <main className="admin-main">{renderVista()}</main>
+      <CrudModal
+        visible={modalVisible}
+        tipo={tipoCrud}
+        onClose={() => setModalVisible(false)}
+        onSubmit={enviarFormulario}
+      />
     </div>
   );
-};
+}
