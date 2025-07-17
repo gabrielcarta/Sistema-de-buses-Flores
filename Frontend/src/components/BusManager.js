@@ -21,42 +21,56 @@ export default function BusManager({ onSelectItem, reloadFlag, crudAction }) {
 
     switch (crudAction.accion) {
       case "crear":
-          axios.post("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
-            accion: "insertar_bus",
-            placa: "XXX-000",
-            servicio: "Economico",
-            n_pisos: 1,
-            n_asientos: 40,
-            id_sede: 1,
-          })
-          .then(() => {
-            alert("✅ Bus creado.");
-            crudAction.onDone(); // para que se actualice el reloadFlag
-          })
-          .catch((err) => console.error("❌ Error al crear bus:", err));
+        const placa = prompt("Ingrese la placa del bus:", "XXX-000");
+        const servicio = prompt("Ingrese el tipo de servicio:", "Economico");
+        const n_pisos = parseInt(prompt("Ingrese n° de pisos:", "1"));
+        const n_asientos = parseInt(prompt("Ingrese n° de asientos:", "40"));
+        const id_sede = parseInt(prompt("Ingrese ID de sede:", "1"));
+
+        if (!placa || !servicio || isNaN(n_pisos) || isNaN(n_asientos) || isNaN(id_sede)) {
+          alert("❌ Datos inválidos para crear el bus.");
+          return;
+        }
+
+        axios.post("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
+          accion: "insertar_bus",
+          placa,
+          servicio,
+          n_pisos,
+          n_asientos,
+          id_sede,
+        })
+        .then(() => {
+          alert("✅ Bus creado.");
+          crudAction.onDone();
+          crudAction.onClear && crudAction.onClear();
+        })
+        .catch((err) => console.error("❌ Error al crear bus:", err));
         break;
 
       case "editar":
         if (!selectedBus) {
           alert("Selecciona un bus para editar.");
           return;
-        }              
+        }
         const nuevaPlaca = prompt("Editar Placa:", selectedBus.Placa);
         const nuevoServicio = prompt("Editar Servicio:", selectedBus.Servicio);
-          axios.post("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
-            accion: "actualizar_bus",
-            id_bus: selectedBus.Id_Bus,
-            placa: nuevaPlaca,
-            servicio: nuevoServicio,
-            n_pisos: selectedBus.N_Pisos,
-            n_asientos: selectedBus.N_asientos,
-            id_sede: selectedBus.Id_Sede,
-          })
-          .then(() => {
-            alert("✏️ Bus editado.");
-            crudAction.onDone();
-          })
-          .catch((err) => console.error("❌ Error al editar bus:", err));
+
+        axios.post("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
+          accion: "actualizar_bus",
+          Id_bus: selectedBus.Id_Bus,
+          nuevaPlaca,
+          nuevoServicio,
+          N_pisos: selectedBus.N_Pisos,
+          N_asientos: selectedBus.N_asientos,
+          Id_Sede: selectedBus.Id_Sede,
+        })
+        .then(() => {
+          alert("✏️ Bus editado.");
+          crudAction.onDone();
+          crudAction.onClear && crudAction.onClear();
+        })
+        .catch((err) => console.error("❌ Error al editar bus:", err));
         break;
 
       case "eliminar":
@@ -70,11 +84,12 @@ export default function BusManager({ onSelectItem, reloadFlag, crudAction }) {
         if (!window.confirm("¿Estás seguro de eliminar este bus?")) return;
           axios.post("http://localhost/proyectos/sistemabusesflores/backend/procesar-crud.php", {
             accion: "eliminar_bus",
-            id_bus: selectedBus.Id_Bus,
+            Id_Bus: selectedBus.Id_Bus,
           })
           .then(() => {
             alert("🗑️ Bus eliminado.");
             crudAction.onDone();
+            crudAction.onClear && crudAction.onClear();
           })
           .catch((err) => console.error("❌ Error al eliminar bus:", err));
         break;

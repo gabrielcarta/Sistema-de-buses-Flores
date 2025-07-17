@@ -85,14 +85,8 @@ function actualizarBus($conn, $Id_Bus, $placa, $servicio, $n_pisos, $n_asientos,
     $stmt->close();
 }
 
-// Eliminar Bus (y sus asientos)
+// Eliminar Bus
 function eliminarBus($conn, $Id_Bus) {
-    $stmt1 = $conn->prepare("DELETE FROM Asiento WHERE Id_Bus = ?");
-    $stmt1->bind_param("i", $Id_Bus);
-    if (!$stmt1->execute()) {
-        file_put_contents("error.log", "Error borrando asientos: " . $stmt1->error . "\n", FILE_APPEND);
-    }
-
     $stmt2 = $conn->prepare("DELETE FROM Bus WHERE Id_Bus = ?");
     $stmt2->bind_param("i", $Id_Bus);
     if (!$stmt2->execute()) {

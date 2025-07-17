@@ -1,4 +1,12 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: *");
+header("Access-Control-Allow-Methods: POST");
+header("Content-Type: application/json");
+
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 include 'db_connect.php';
 
 $dni = $_POST['dni'];
@@ -14,6 +22,14 @@ $id_asiento = $_POST['id_asiento'];
 $precio = $_POST['precio'];
 $medio_pago = $_POST['medio_pago'];
 
+$campos = ['dni','nombre','apellido','apellido2','fecha_nac','sexo','telefono','correo','id_viaje','id_asiento','precio','medio_pago'];
+foreach ($campos as $c) {
+    if (!isset($_POST[$c])) {
+        echo json_encode(['success' => false, 'mensaje' => "Falta el campo $c"]);
+        exit;
+    }
+}
+
 $anio_nac = intval(substr($fecha_nac, 0, 4));
 $anio_actual = intval(date('Y'));
 $categoria = ($anio_actual - $anio_nac < 18) ? 'Niño' : (($sexo == 'M') ? 'Hombre' : 'Mujer');
@@ -22,7 +38,7 @@ $sql = "INSERT INTO Persona (DNI, Nombre, Apellido, Sexo, Correo, Telefono)
         VALUES (?, ?, CONCAT(?, ' ', ?), ?, ?, ?)
         ON DUPLICATE KEY UPDATE Nombre=VALUES(Nombre), Apellido=VALUES(Apellido), Sexo=VALUES(Sexo), Correo=VALUES(Correo), Telefono=VALUES(Telefono)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("ssssss", $dni, $nombre, $apellido, $apellido2, $sexo, $correo, $telefono);
+$stmt->bind_param("sssssss", $dni, $nombre, $apellido, $apellido2, $sexo, $correo, $telefono);
 $stmt->execute();
 $stmt->close();
 

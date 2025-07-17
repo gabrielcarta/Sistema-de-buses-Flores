@@ -1,0 +1,96 @@
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+POST: Array
+(
+)
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"eliminar_bus","Id_Bus":"3"}
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_bus","placa":"XXX-000","servicio":"Economico","n_pisos":1,"n_asientos":40,"id_sede":1}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_bus","id_bus":"3","placa":null,"servicio":null,"n_pisos":"2","n_asientos":"52","id_sede":"1"}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_bus","id_bus":"4","placa":"ABC-123","servicio":"WAAAAAAAAAAAA","n_pisos":"2","n_asientos":"44","id_sede":"1"}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"eliminar_bus","Id_Bus":"4"}
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_bus","placa":"XXX-000","servicio":"Economico","n_pisos":1,"n_asientos":40,"id_sede":1}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_bus","placa":"ABC-123","servicio":"WAA","n_pisos":2,"n_asientos":40,"id_sede":1}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_bus","placa":"ABC-123","servicio":"Economico","n_pisos":1,"n_asientos":40,"id_sede":1}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_bus","Id_bus":"454","nuevaPlaca":"OÑO-123","nuevoServicio":"PERRA","N_pisos":"2","N_asientos":"52","Id_Sede":"1"}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_ruta","id_ruta":"1","duracion":"9:00:00","id_origen":1,"id_llegada":2}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_ruta","id_ruta":"1","duracion":"01:00:00","id_origen":1,"id_llegada":2}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_ruta","id_ruta":"1","duracion":"02:00:00","id_origen":2,"id_llegada":1}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_ruta","id_ruta":"1","duracion":"01","id_origen":1,"id_llegada":2}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"eliminar_ruta","id_ruta":"1"}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_ruta","duracion":"08:00:00","id_origen":1,"id_llegada":2}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"insertar_ruta","duracion":"69:00:00","id_origen":1,"id_llegada":2}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"eliminar_ruta","id_ruta":"381"}
+LLEGÓ AL PHP
+RAW: {"accion":"eliminar_ruta","id_ruta":"381"}
+LLEGÓ AL PHP
+RAW: 
+LLEGÓ AL PHP
+RAW: {"accion":"actualizar_bus","Id_bus":"5","nuevaPlaca":"ABC-123","nuevoServicio":"Economico","N_pisos":"1","N_asientos":"48","Id_Sede":"1"}
